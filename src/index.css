@@ -8,10 +8,23 @@
 
 body {
   background-color: #FEF8E6;
+  color: #1E1E1E;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Just Me Again Down Here', cursive, sans-serif;
 }
 
-@theme{
-  --font-JustM:'Just Me Again Down Here',serif;
-  --font-JustA:'Just Another Hand',serif;
+@theme {
+  --font-JustM: 'Just Me Again Down Here', cursive, sans-serif;
+  --font-JustA: 'Just Another Hand', cursive, sans-serif;
+}
+
+.font-JustM {
+  font-family: 'Just Me Again Down Here', cursive, sans-serif;
+}
+
+.font-JustA {
+  font-family: 'Just Another Hand', cursive, sans-serif;
 }
 
