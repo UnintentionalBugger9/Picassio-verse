@@ -65,6 +65,9 @@ Follow these steps to find Picassio's thoughts:
 7. The fractures will magically mend, revealing the **Easter Egg** button and unlocking the secret modal confession!
 
 ---
+##Note
+
+Some elements might glitch on website make sure to run it on localhost
 
 ## 💖 Credits & Acknowledgements
 
@@ -73,6 +76,7 @@ Special thanks to the following platforms and tools for providing reference asse
 - **[Pixabay](https://pixabay.com/)**: Reference sound effects and audio tracks.
 - **[Vecteezy](https://www.vecteezy.com/)**: Vector illustrations, textures, and graphic inspirations.
 - **[ChatGPT](https://openai.com/chatgpt)**: Creative writing assistance, story concepts, and narrative text improvisation.
+
 
 ---
 
