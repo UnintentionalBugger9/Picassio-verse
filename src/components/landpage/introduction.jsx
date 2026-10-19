@@ -13,16 +13,16 @@ function Introduction() {
                 </img>
             </div>
 
-            <div className='flex gap-16 md:gap-20 items-center justify-center my-auto'>
-                <div className='h-[300px] w-[230px] flex items-center justify-center'>
-                    <img src='/creature/pencil.png' alt="Picassio" className="max-h-full max-w-full object-contain"></img>
+            <div className='flex flex-col md:flex-row gap-10 md:gap-14 items-center justify-center my-auto max-w-5xl px-6'>
+                <div className='h-[260px] md:h-[300px] w-[210px] md:w-[240px] flex items-center justify-center flex-shrink-0'>
+                    <img src='/creature/pencil.png' alt="Picassio" className="max-h-full max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"></img>
                 </div>
 
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-3 max-w-xl text-center md:text-left'>
                     {text.map((content) => {
                         return <div key={content.id}>
-                            <div>{content.question}</div>
-                            <div className='text-[#3903FF]'>{content.answer}</div>
+                            <div className="text-3xl md:text-4xl">{content.question}</div>
+                            <div className='text-[#3903FF] text-3xl md:text-4xl'>{content.answer}</div>
                         </div>
                     })}
                 </div>

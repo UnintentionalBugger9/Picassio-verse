@@ -495,10 +495,7 @@ function WandStory() {
                 >
                   <span
                     key={displayText}
-                    className={`font-JustM tracking-wide transition-all duration-500 transform ${isPositive
-                      ? 'text-[#E52E2E] text-4xl md:text-5xl font-bold scale-110 drop-shadow-sm'
-                      : 'text-[#D62828] text-3xl md:text-4xl'
-                      }`}
+                    className="font-JustM tracking-wide text-[#D62828] text-3xl md:text-4xl"
                     style={{
                       fontFamily: "'Just Me Again Down Here', cursive, sans-serif",
                     }}

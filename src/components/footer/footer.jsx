@@ -42,40 +42,37 @@ function Footer({ isGemEquipped, onOpenEasterEgg }) {
                 <p className='mt-1'>Make sure your verdict is worth his pain.</p>
             </div>
             
-            {/* Cracked Peach Pill Button / Easter Egg Button with buttonsReal border */}
+            {/* Cracked Peach Button / Easter Egg Button matching sound button design */}
             <div 
               onClick={handleCrackButtonClick}
-              className={`relative h-[52px] flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none ${
-                isRepaired ? 'px-8 min-w-[160px]' : 'w-[140px]'
-              }`}
+              className={`relative text-center h-[60px] ${isRepaired ? 'w-[160px]' : 'w-[140px]'} cursor-pointer hover:scale-105 active:scale-95 transition-transform select-none`}
               title={isRepaired ? 'Easter Egg' : isGemEquipped ? 'Click with Gem cursor to repair' : ''}
             >
-              {/* Inner peach colored background pill */}
-              <div className="absolute inset-1 rounded-full bg-[#F7DAC1]"></div>
-
-              {!isRepaired ? (
-                /* Prominent, realistic crack fracture network */
-                <svg viewBox="0 0 140 52" className="w-full h-full absolute inset-0 p-1 pointer-events-none fill-none stroke-linecap-round stroke-linejoin-round z-10">
+              <div className={`bg-[#F7DAC1] h-[50px] pt-1.5 mt-1 rounded-4xl ${isRepaired ? 'w-[150px]' : 'w-[130px]'} relative left-1 overflow-hidden`}>
+                {!isRepaired ? (
+                  /* Prominent, realistic crack fracture network */
+                  <svg viewBox="0 0 130 50" className="w-full h-full absolute inset-0 p-1 pointer-events-none fill-none stroke-linecap-round stroke-linejoin-round z-10">
                     {/* Deep shadow fracture fissures */}
                     <path 
-                      d="M 70 4 L 65 14 L 76 23 L 67 34 L 72 48 M 65 14 L 48 18 L 34 12 L 18 22 M 67 34 L 51 38 L 40 35 M 76 23 L 94 20 L 110 28 L 124 22 M 94 20 L 102 37 L 118 41" 
+                      d="M 65 4 L 60 14 L 71 23 L 62 34 L 67 46 M 60 14 L 45 18 L 32 12 L 16 22 M 62 34 L 48 38 L 38 35 M 71 23 L 88 20 L 102 28 L 115 22 M 88 20 L 96 37 L 110 41" 
                       stroke="#222222" 
                       strokeWidth="2.8" 
                     />
                     {/* High-contrast highlight specular edge */}
                     <path 
-                      d="M 71 5 L 66 15 L 77 24 L 68 35 L 73 49 M 66 15 L 49 19 L 35 13 L 19 23 M 68 35 L 52 39 L 41 36 M 77 24 L 95 21 L 111 29 L 125 23 M 95 21 L 103 38 L 119 42" 
+                      d="M 66 5 L 61 15 L 72 24 L 63 35 L 68 47 M 61 15 L 46 19 L 33 13 L 17 23 M 63 35 L 49 39 L 39 36 M 72 24 L 89 21 L 103 29 L 116 23 M 89 21 L 97 38 L 111 42" 
                       stroke="#FFFFFF" 
                       strokeWidth="1.8" 
                       opacity="0.95" 
                     />
-                </svg>
-              ) : (
-                /* Repaired button showing Easter Egg */
-                <span className="relative z-10 font-JustM text-3xl md:text-4xl text-[#1E1E1E] tracking-wide pt-0.5">
-                  Easter Egg
-                </span>
-              )}
+                  </svg>
+                ) : (
+                  /* Repaired button showing Easter Egg */
+                  <h1 className="relative z-10 font-JustM text-3xl text-[#1E1E1E]">
+                    Easter Egg
+                  </h1>
+                )}
+              </div>
 
               {/* Hand-drawn button border image matching sound button */}
               <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none z-20" alt="" />

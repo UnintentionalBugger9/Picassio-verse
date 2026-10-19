@@ -22,8 +22,15 @@ const PROJECTS = [
     title: 'The Repair gem',
     image: '/cursors/gems.png',
     cursor: '/cursors/gemCursor.png',
-    description:
-      'A device that helps things go back in time in their previous state and can repair broken objects by equipping',
+    description: (
+      <>
+        A device that helps things go back in time in their previous state and can repair{' '}
+        <span className="font-bold text-black" style={{ WebkitTextStroke: '0.9px #000' }}>
+          broken objects
+        </span>{' '}
+        by equipping
+      </>
+    ),
   },
 ];
 
@@ -111,37 +118,42 @@ function ProjectsModal({ isOpen, onClose, equippedProject: propEquipped, setEqui
         </h1>
 
         {/* Project Image */}
-        <div className="h-[200px] md:h-[260px] flex items-center justify-center mb-6 md:mb-8">
+        <div className="h-[180px] md:h-[220px] flex items-center justify-center mb-5 md:mb-6">
           <img
             src={currentProject.image}
             alt={currentProject.title}
-            className="max-h-full max-w-[280px] md:max-w-[340px] object-contain drop-shadow-sm transition-all duration-300"
+            className={`max-h-full ${
+              currentProject.id === 'beacon' ? 'max-h-[160px] md:max-h-[190px] max-w-[210px] md:max-w-[250px]' : 'max-w-[280px] md:max-w-[340px]'
+            } object-contain drop-shadow-sm transition-all duration-300`}
           />
         </div>
 
-        {/* Project Description */}
-        <p
-          className="text-2xl md:text-3xl lg:text-4xl text-[#1E1E1E] font-JustM max-w-2xl leading-relaxed mb-8 md:mb-10 px-4"
-          style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
-        >
-          {currentProject.description}
-        </p>
+        {/* Project Description container with consistent height */}
+        <div className="min-h-[76px] md:min-h-[96px] max-w-2xl flex items-center justify-center mb-6 md:mb-8 px-4">
+          <p
+            className="text-2xl md:text-3xl lg:text-4xl text-[#1E1E1E] font-JustM leading-snug"
+            style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+          >
+            {currentProject.description}
+          </p>
+        </div>
 
-        {/* Buttons Row with buttonsReal image borders */}
+        {/* Buttons Row with buttonsReal image borders matching sound button design */}
         <div className="flex items-center justify-center gap-5 md:gap-8">
           {/* Prev Button (shown on project 2 and 3) */}
           {currentIndex > 0 && (
             <div
               onClick={handlePrev}
-              className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
+              className="relative text-center h-[60px] w-[140px] cursor-pointer hover:scale-105 active:scale-95 transition-transform select-none"
             >
-              <div className="absolute inset-1 rounded-full bg-[#FFBCA1]"></div>
-              <span
-                className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
-                style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
-              >
-                Prev &gt;
-              </span>
+              <div className="bg-[#FFBCA1] h-[50px] pt-1.5 mt-1 rounded-4xl w-[130px] relative left-1">
+                <h1
+                  className="text-[#1E1E1E] text-3xl font-JustM"
+                  style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+                >
+                  Prev &gt;
+                </h1>
+              </div>
               <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
             </div>
           )}
@@ -149,18 +161,20 @@ function ProjectsModal({ isOpen, onClose, equippedProject: propEquipped, setEqui
           {/* Equip / Equipped Button */}
           <div
             onClick={handleEquipToggle}
-            className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
+            className="relative text-center h-[60px] w-[140px] cursor-pointer hover:scale-105 active:scale-95 transition-transform select-none"
           >
             <div
-              className={`absolute inset-1 rounded-full transition-colors ${isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
-                }`}
-            ></div>
-            <span
-              className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
-              style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              className={`${
+                isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
+              } h-[50px] pt-1.5 mt-1 rounded-4xl w-[130px] relative left-1 transition-colors`}
             >
-              {isEquipped ? 'Equipped' : 'Equip'}
-            </span>
+              <h1
+                className="text-[#1E1E1E] text-3xl font-JustM"
+                style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              >
+                {isEquipped ? 'Equipped' : 'Equip'}
+              </h1>
+            </div>
             <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
           </div>
 
@@ -168,15 +182,16 @@ function ProjectsModal({ isOpen, onClose, equippedProject: propEquipped, setEqui
           {currentIndex < PROJECTS.length - 1 && (
             <div
               onClick={handleNext}
-              className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
+              className="relative text-center h-[60px] w-[140px] cursor-pointer hover:scale-105 active:scale-95 transition-transform select-none"
             >
-              <div className="absolute inset-1 rounded-full bg-[#FDFBF7]"></div>
-              <span
-                className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
-                style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
-              >
-                Next &gt;
-              </span>
+              <div className="bg-[#FDFBF7] h-[50px] pt-1.5 mt-1 rounded-4xl w-[130px] relative left-1">
+                <h1
+                  className="text-[#1E1E1E] text-3xl font-JustM"
+                  style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+                >
+                  Next &gt;
+                </h1>
+              </div>
               <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
             </div>
           )}

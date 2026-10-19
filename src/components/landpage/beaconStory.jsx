@@ -39,10 +39,10 @@ function BeaconStory({ isMuted }) {
         },
       });
 
-      // House starts off-screen left, slides into center
+      // House starts partially on left (shifted a little to the right), slides into center
       tl.fromTo(
         houseRef.current,
-        { xPercent: -70 },
+        { xPercent: -48 },
         { xPercent: 0, duration: 1, ease: 'none' },
         0
       );
@@ -150,10 +150,11 @@ function BeaconStory({ isMuted }) {
       {/* Stage 1 text — right side */}
       <div ref={stage1Ref}
         className="absolute right-8 md:right-16 lg:right-24 top-[18%] w-[45%] max-w-2xl z-20 pointer-events-none font-JustM">
-        {/* Hope Heaven pill with buttonsReal.png border */}
-        <div className="relative inline-flex items-center justify-center h-[52px] px-6 mb-5 select-none">
-          <div className="absolute inset-1 rounded-full bg-[#9BA3CC]"></div>
-          <span className="relative z-10 text-white text-3xl font-JustM pt-1">Hope Heaven</span>
+        {/* Hope Heaven button matching sound button design */}
+        <div className="relative text-center h-[60px] w-[160px] inline-block mb-5 select-none">
+          <div className="bg-[#9BA3CC] h-[50px] pt-1.5 mt-1 rounded-4xl w-[150px] relative left-1">
+            <h1 className="text-white text-3xl font-JustM">Hope Heaven</h1>
+          </div>
           <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
         </div>
         <p className="text-3xl md:text-4xl lg:text-[2.7rem] text-[#1E1E1E] leading-relaxed">
@@ -187,7 +188,7 @@ function BeaconStory({ isMuted }) {
 
       {/* Stage 3 — Grass at bottom */}
       <img ref={grassRef} src="/projects/beacon/grass.png" alt=""
-        className="absolute  left-0 w-full h-auto max-h-[36vh] object-cover object-bottom opacity-0 z-10 pointer-events-none" />
+        className="absolute bottom-0 left-0 w-full h-auto object-contain object-bottom opacity-0 z-10 pointer-events-none" />
 
       {/* Stage 3 — Lights on right */}
       <div ref={lightsRef}

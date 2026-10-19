@@ -111,6 +111,9 @@ function App() {
   const handleGetStarted = () => {
     setIsAboutMode(true);
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 60);
   };
 
   // Navbar handler
@@ -118,14 +121,20 @@ function App() {
     if (i === 0) {
       // Home: return to normal flow and scroll to top
       setIsAboutMode(false);
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 60);
     } else if (i === 2) {
       // Projects: open projects page modal
       setIsProjectsOpen(true);
     } else if (i === 3) {
       // About: open about story flow
       setIsAboutMode(true);
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 60);
     }
   };
 
@@ -156,7 +165,10 @@ function App() {
       });
     }, container);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      ScrollTrigger.refresh();
+    };
   }, [isAboutMode]);
 
   return (
@@ -174,9 +186,10 @@ function App() {
           Page Flow:
           1. Normal scroll flow: FirstPage -> BeaconStory (orphanage) -> WandStory (boy) -> Footer
           2. About flow (opened by 'Get Started' or 'About'): Introduction -> Job -> Story -> Footer
+          Persistent display toggle prevents DOM unmounting conflicts with GSAP pinSpacers (fixing removeChild error)
         */}
-        {isAboutMode ? (
-          /* About Flow: Introduction -> Job -> Story -> Footer */
+        <div style={{ display: isAboutMode ? 'block' : 'none' }}>
+          {/* About Flow: Introduction -> Job -> Story -> Footer */}
           <section ref={horizontalRef} className="w-screen h-screen overflow-hidden relative">
             <div
               ref={trackRef}
@@ -200,33 +213,33 @@ function App() {
               </div>
             </div>
           </section>
-        ) : (
-          /* Normal Flow: FirstPage -> BeaconStory -> WandStory -> Footer */
-          <>
-            {/* 1. FirstPage — full viewport */}
-            <section className="w-full h-screen">
-              <FirstPage onGetStarted={handleGetStarted} />
-            </section>
+        </div>
 
-            {/* 2. BeaconStory — scroll-pinned orphanage section */}
-            <section id="beacon-section">
-              <BeaconStory isMuted={isMuted} />
-            </section>
+        <div style={{ display: isAboutMode ? 'none' : 'block' }}>
+          {/* Normal Flow: FirstPage -> BeaconStory -> WandStory -> Footer */}
+          {/* 1. FirstPage — full viewport */}
+          <section className="w-full h-screen">
+            <FirstPage onGetStarted={handleGetStarted} />
+          </section>
 
-            {/* 3. WandStory — child scene with speech bubbles and threads */}
-            <section id="wand-section">
-              <WandStory />
-            </section>
+          {/* 2. BeaconStory — scroll-pinned orphanage section */}
+          <section id="beacon-section">
+            <BeaconStory isMuted={isMuted} />
+          </section>
 
-            {/* 4. Footer in normal scroll path */}
-            <section id="footer-section" className="w-full h-screen">
-              <Footer
-                isGemEquipped={equippedProject === 'gem'}
-                onOpenEasterEgg={() => setIsEasterEggOpen(true)}
-              />
-            </section>
-          </>
-        )}
+          {/* 3. WandStory — child scene with speech bubbles and threads */}
+          <section id="wand-section">
+            <WandStory />
+          </section>
+
+          {/* 4. Footer in normal scroll path */}
+          <section id="footer-section" className="w-full h-screen">
+            <Footer
+              isGemEquipped={equippedProject === 'gem'}
+              onOpenEasterEgg={() => setIsEasterEggOpen(true)}
+            />
+          </section>
+        </div>
       </div>
 
       {/* Projects Modal / Page */}
