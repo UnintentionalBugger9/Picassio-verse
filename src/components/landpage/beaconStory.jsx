@@ -49,7 +49,7 @@ function BeaconStory({ isMuted }) {
       // House starts partially on left (shifted a little to the right), slides into center
       tl.fromTo(
         houseRef.current,
-        { xPercent: -48 },
+        { xPercent: -58 },
         { xPercent: 0, duration: 1, ease: 'none' },
         0
       );
