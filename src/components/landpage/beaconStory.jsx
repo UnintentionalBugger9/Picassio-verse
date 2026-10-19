@@ -86,8 +86,8 @@ function BeaconStory({ isMuted }) {
       try {
         const audio = new Audio('/sounds/orphanageSound.mp3');
         audio.currentTime = 0;
-        audio.play().catch(() => {});
-      } catch (e) {}
+        audio.play().catch(() => { });
+      } catch (e) { }
     }
 
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
@@ -157,7 +157,7 @@ function BeaconStory({ isMuted }) {
           <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
         </div>
         <p className="text-3xl md:text-4xl lg:text-[2.7rem] text-[#1E1E1E] leading-relaxed">
-          Hope Heaven is an orphanage located in a part of venice where very few people have houses very few people live around and the place feels like the only trace of human life in that area
+          Hope Heaven is an orphanage tucked away in a remote part of Venice, surrounded by very few homes and almost no signs of human life. Its presence feels like the only trace of humanity in an otherwise quiet and isolated corner of city.
         </p>
       </div>
 
@@ -187,7 +187,7 @@ function BeaconStory({ isMuted }) {
 
       {/* Stage 3 — Grass at bottom */}
       <img ref={grassRef} src="/projects/beacon/grass.png" alt=""
-        className="absolute bottom-0 left-0 w-full h-auto max-h-[36vh] object-cover object-bottom opacity-0 z-10 pointer-events-none" />
+        className="absolute  left-0 w-full h-auto max-h-[36vh] object-cover object-bottom opacity-0 z-10 pointer-events-none" />
 
       {/* Stage 3 — Lights on right */}
       <div ref={lightsRef}

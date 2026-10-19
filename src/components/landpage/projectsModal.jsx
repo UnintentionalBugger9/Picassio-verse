@@ -7,7 +7,7 @@ const PROJECTS = [
     image: '/cursors/beacon.png',
     cursor: '/cursors/beaconCursor.png',
     description:
-      'It is a device that was created that wherever there is an orphanage multiple men and women are spawned there to take care of babies like their own parents so they never feel lonely',
+      'The Beacon is a device designed to transform orphanages into homes. Wherever an orphanage exists, it spawns caring men and women to nurture the children like their own, ensuring no child ever feels alone.',
   },
   {
     id: 'wand',
@@ -15,7 +15,7 @@ const PROJECTS = [
     image: '/cursors/wand.png',
     cursor: '/cursors/wandCursor.png',
     description:
-      'it is a device that helps any body who is feeling anxious feel sudden happiness',
+      'It is a device designed to help anyone overcome anxiety and experience a sudden burst of happiness for a temporary amount of time',
   },
   {
     id: 'gem',
@@ -23,7 +23,7 @@ const PROJECTS = [
     image: '/cursors/gems.png',
     cursor: '/cursors/gemCursor.png',
     description:
-      'A device that helps things go back in time in their previous state',
+      'A device that helps things go back in time in their previous state and can repair broken objects by equipping',
   },
 ];
 
@@ -152,9 +152,8 @@ function ProjectsModal({ isOpen, onClose, equippedProject: propEquipped, setEqui
             className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
           >
             <div
-              className={`absolute inset-1 rounded-full transition-colors ${
-                isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
-              }`}
+              className={`absolute inset-1 rounded-full transition-colors ${isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
+                }`}
             ></div>
             <span
               className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"

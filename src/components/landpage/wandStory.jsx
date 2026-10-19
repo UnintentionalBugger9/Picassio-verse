@@ -220,7 +220,7 @@ function WandStory() {
       <img
         src="/projects/wand/bg.png"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
+        className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0"
       />
 
       {/* Stage 1: Paragraph to the right of the boy talking about how a depressed boy severed his ties with negativity */}
@@ -229,7 +229,7 @@ function WandStory() {
         className="absolute left-[30%] md:left-[36%] lg:left-[40%] top-[24%] md:top-[28%] w-[60%] md:w-[52%] max-w-2xl z-20 pointer-events-none font-JustM"
       >
         <p className="text-3xl md:text-4xl lg:text-[2.6rem] text-[#1E1E1E] leading-relaxed">
-          Trapped under the weight of anxiety, a depressed boy felt tangled in a web of loneliness and sorrow. Every negative thought bound him deeper into despair. But with a single spark of hope, he severed his ties with negativity—breaking every tether to rediscover joy, friendship, and love.
+          A teenage mind, weighed down by uncertainty about the future and the things that matter most, was consumed by anxiety. Picassio severed those tangled threads with his wand, freeing the boy from the weight of his worries and bringing him a much-needed spark of joy and dopamine.
         </p>
       </div>
 
@@ -264,253 +264,252 @@ function WandStory() {
           className="absolute inset-0 w-full h-full pointer-events-none z-10"
           style={{ overflow: 'visible' }}
         >
-        {THREADS_CONFIG.map((thread) => {
-          const fromPt = bubbleCoords[thread.from];
-          const toPt = bubbleCoords[thread.to];
-          if (!fromPt || !toPt) return null;
+          {THREADS_CONFIG.map((thread) => {
+            const fromPt = bubbleCoords[thread.from];
+            const toPt = bubbleCoords[thread.to];
+            if (!fromPt || !toPt) return null;
 
-          const isSevered = severedThreads[thread.id];
+            const isSevered = severedThreads[thread.id];
 
-          // Compute midpoint & curved catenary sag
-          const midX = (fromPt.x + toPt.x) / 2;
-          const midY = (fromPt.y + toPt.y) / 2 + (thread.sag || 20);
+            // Compute midpoint & curved catenary sag
+            const midX = (fromPt.x + toPt.x) / 2;
+            const midY = (fromPt.y + toPt.y) / 2 + (thread.sag || 20);
 
-          if (!isSevered) {
-            // Intact realistic thick thread with organic catenary droop
-            const pathData = `M ${fromPt.x} ${fromPt.y} Q ${midX} ${midY} ${toPt.x} ${toPt.y}`;
+            if (!isSevered) {
+              // Intact realistic thick thread with organic catenary droop
+              const pathData = `M ${fromPt.x} ${fromPt.y} Q ${midX} ${midY} ${toPt.x} ${toPt.y}`;
 
-            return (
-              <g
-                key={thread.id}
-                className="group pointer-events-auto cursor-pointer"
-                onClick={(e) => handleSeverThread(thread.id, e)}
-              >
-                {/* Invisible wide hit area for effortless clicking */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="transparent"
-                  strokeWidth="28"
-                  strokeLinecap="round"
+              return (
+                <g
+                  key={thread.id}
+                  className="group pointer-events-auto cursor-pointer"
+                  onClick={(e) => handleSeverThread(thread.id, e)}
+                >
+                  {/* Invisible wide hit area for effortless clicking */}
+                  <path
+                    d={pathData}
+                    fill="none"
+                    stroke="transparent"
+                    strokeWidth="28"
+                    strokeLinecap="round"
+                  />
+
+                  {/* Dark under-shadow for depth */}
+                  <path
+                    d={pathData}
+                    fill="none"
+                    stroke="#6B0A0A"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    opacity="0.8"
+                  />
+
+                  {/* Core thick scarlet red thread with yarn texture filter */}
+                  <path
+                    d={pathData}
+                    fill="none"
+                    stroke="#D32F2F"
+                    strokeWidth="4.5"
+                    strokeLinecap="round"
+                    filter="url(#thread-yarn-texture)"
+                    className="transition-all duration-200 group-hover:stroke-[#E53935]"
+                  />
+
+                  {/* Intertwined twisted strand highlight for real yarn look */}
+                  <path
+                    d={pathData}
+                    fill="none"
+                    stroke="#FF8A80"
+                    strokeWidth="2"
+                    strokeDasharray="6 4"
+                    strokeLinecap="round"
+                    opacity="0.9"
+                  />
+
+                  {/* Secondary twisted spiral ply */}
+                  <path
+                    d={pathData}
+                    fill="none"
+                    stroke="#B71C1C"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 7"
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </g>
+              );
+            } else {
+              // Severed thread: snaps in two halves, recoiling and drooping down loose with frayed tips
+              const cutDropY = midY + 45;
+              const half1EndX = fromPt.x + (midX - fromPt.x) * 0.55;
+              const half1EndY = fromPt.y + (cutDropY - fromPt.y) * 0.75;
+
+              const half2StartX = toPt.x + (midX - toPt.x) * 0.55;
+              const half2StartY = toPt.y + (cutDropY - toPt.y) * 0.75;
+
+              const path1 = `M ${fromPt.x} ${fromPt.y} Q ${fromPt.x * 0.7 + midX * 0.3} ${midY + 15} ${half1EndX} ${half1EndY}`;
+              const path2 = `M ${toPt.x} ${toPt.y} Q ${toPt.x * 0.7 + midX * 0.3} ${midY + 15} ${half2StartX} ${half2StartY}`;
+
+              return (
+                <g key={thread.id} className="pointer-events-none opacity-85">
+                  {/* Half 1 drooping limp */}
+                  <path
+                    d={path1}
+                    fill="none"
+                    stroke="#6B0A0A"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    opacity="0.7"
+                  />
+                  <path
+                    d={path1}
+                    fill="none"
+                    stroke="#D32F2F"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    filter="url(#thread-yarn-texture)"
+                  />
+                  <path
+                    d={path1}
+                    fill="none"
+                    stroke="#FF8A80"
+                    strokeWidth="1.8"
+                    strokeDasharray="5 3"
+                    strokeLinecap="round"
+                  />
+                  {/* Frayed fiber tip on severed end 1 */}
+                  <line
+                    x1={half1EndX}
+                    y1={half1EndY}
+                    x2={half1EndX - 3}
+                    y2={half1EndY + 5}
+                    stroke="#D32F2F"
+                    strokeWidth="1.5"
+                  />
+                  <line
+                    x1={half1EndX}
+                    y1={half1EndY}
+                    x2={half1EndX + 2}
+                    y2={half1EndY + 6}
+                    stroke="#FF8A80"
+                    strokeWidth="1.2"
+                  />
+
+                  {/* Half 2 drooping limp */}
+                  <path
+                    d={path2}
+                    fill="none"
+                    stroke="#6B0A0A"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    opacity="0.7"
+                  />
+                  <path
+                    d={path2}
+                    fill="none"
+                    stroke="#D32F2F"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    filter="url(#thread-yarn-texture)"
+                  />
+                  <path
+                    d={path2}
+                    fill="none"
+                    stroke="#FF8A80"
+                    strokeWidth="1.8"
+                    strokeDasharray="5 3"
+                    strokeLinecap="round"
+                  />
+                  {/* Frayed fiber tip on severed end 2 */}
+                  <line
+                    x1={half2StartX}
+                    y1={half2StartY}
+                    x2={half2StartX - 3}
+                    y2={half2StartY + 6}
+                    stroke="#D32F2F"
+                    strokeWidth="1.5"
+                  />
+                  <line
+                    x1={half2StartX}
+                    y1={half2StartY}
+                    x2={half2StartX + 2}
+                    y2={half2StartY + 5}
+                    stroke="#FF8A80"
+                    strokeWidth="1.2"
+                  />
+                </g>
+              );
+            }
+          })}
+
+          {/* Dynamic cut particle sparks */}
+          {severParticles.map((p) => (
+            <circle
+              key={p.id}
+              cx={p.x + p.vx * 0.05}
+              cy={p.y + p.vy * 0.05}
+              r={p.size}
+              fill={p.color}
+              className="animate-ping"
+              style={{ animationDuration: '0.6s' }}
+            />
+          ))}
+        </svg>
+
+        {/* 5 Speech Bubbles positioned exactly as in reference image */}
+        {BUBBLE_DATA.map((bubble) => {
+          const isPositive = positiveBubbles[bubble.id];
+          const displayText = isPositive ? bubble.positiveText : bubble.initialText;
+
+          return (
+            <div
+              key={bubble.id}
+              ref={(el) => (bubbleRefs.current[bubble.id] = el)}
+              onClick={() => handleBubbleClick(bubble.id)}
+              style={{
+                position: 'absolute',
+                left: `${bubble.leftPercent}%`,
+                top: `${bubble.topPercent}%`,
+                width: `${bubble.widthVw}vw`,
+                minWidth: '190px',
+                maxWidth: '290px',
+              }}
+              className="z-20 cursor-pointer transition-transform duration-300 hover:scale-[1.03]"
+            >
+              <div className="relative w-full">
+                {/* Dialogue Box Speech Bubble Image */}
+                <img
+                  src="/projects/wand/speech.png"
+                  alt="Speech bubble"
+                  onLoad={updateCoordinates}
+                  className="w-full h-auto object-contain drop-shadow-sm select-none pointer-events-none"
                 />
 
-                {/* Dark under-shadow for depth */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="#6B0A0A"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  opacity="0.8"
-                />
-
-                {/* Core thick scarlet red thread with yarn texture filter */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="#D32F2F"
-                  strokeWidth="4.5"
-                  strokeLinecap="round"
-                  filter="url(#thread-yarn-texture)"
-                  className="transition-all duration-200 group-hover:stroke-[#E53935]"
-                />
-
-                {/* Intertwined twisted strand highlight for real yarn look */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="#FF8A80"
-                  strokeWidth="2"
-                  strokeDasharray="6 4"
-                  strokeLinecap="round"
-                  opacity="0.9"
-                />
-
-                {/* Secondary twisted spiral ply */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="#B71C1C"
-                  strokeWidth="1.5"
-                  strokeDasharray="3 7"
-                  strokeLinecap="round"
-                  opacity="0.75"
-                />
-              </g>
-            );
-          } else {
-            // Severed thread: snaps in two halves, recoiling and drooping down loose with frayed tips
-            const cutDropY = midY + 45;
-            const half1EndX = fromPt.x + (midX - fromPt.x) * 0.55;
-            const half1EndY = fromPt.y + (cutDropY - fromPt.y) * 0.75;
-
-            const half2StartX = toPt.x + (midX - toPt.x) * 0.55;
-            const half2StartY = toPt.y + (cutDropY - toPt.y) * 0.75;
-
-            const path1 = `M ${fromPt.x} ${fromPt.y} Q ${fromPt.x * 0.7 + midX * 0.3} ${midY + 15} ${half1EndX} ${half1EndY}`;
-            const path2 = `M ${toPt.x} ${toPt.y} Q ${toPt.x * 0.7 + midX * 0.3} ${midY + 15} ${half2StartX} ${half2StartY}`;
-
-            return (
-              <g key={thread.id} className="pointer-events-none opacity-85">
-                {/* Half 1 drooping limp */}
-                <path
-                  d={path1}
-                  fill="none"
-                  stroke="#6B0A0A"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  opacity="0.7"
-                />
-                <path
-                  d={path1}
-                  fill="none"
-                  stroke="#D32F2F"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  filter="url(#thread-yarn-texture)"
-                />
-                <path
-                  d={path1}
-                  fill="none"
-                  stroke="#FF8A80"
-                  strokeWidth="1.8"
-                  strokeDasharray="5 3"
-                  strokeLinecap="round"
-                />
-                {/* Frayed fiber tip on severed end 1 */}
-                <line
-                  x1={half1EndX}
-                  y1={half1EndY}
-                  x2={half1EndX - 3}
-                  y2={half1EndY + 5}
-                  stroke="#D32F2F"
-                  strokeWidth="1.5"
-                />
-                <line
-                  x1={half1EndX}
-                  y1={half1EndY}
-                  x2={half1EndX + 2}
-                  y2={half1EndY + 6}
-                  stroke="#FF8A80"
-                  strokeWidth="1.2"
-                />
-
-                {/* Half 2 drooping limp */}
-                <path
-                  d={path2}
-                  fill="none"
-                  stroke="#6B0A0A"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  opacity="0.7"
-                />
-                <path
-                  d={path2}
-                  fill="none"
-                  stroke="#D32F2F"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  filter="url(#thread-yarn-texture)"
-                />
-                <path
-                  d={path2}
-                  fill="none"
-                  stroke="#FF8A80"
-                  strokeWidth="1.8"
-                  strokeDasharray="5 3"
-                  strokeLinecap="round"
-                />
-                {/* Frayed fiber tip on severed end 2 */}
-                <line
-                  x1={half2StartX}
-                  y1={half2StartY}
-                  x2={half2StartX - 3}
-                  y2={half2StartY + 6}
-                  stroke="#D32F2F"
-                  strokeWidth="1.5"
-                />
-                <line
-                  x1={half2StartX}
-                  y1={half2StartY}
-                  x2={half2StartX + 2}
-                  y2={half2StartY + 5}
-                  stroke="#FF8A80"
-                  strokeWidth="1.2"
-                />
-              </g>
-            );
-          }
-        })}
-
-        {/* Dynamic cut particle sparks */}
-        {severParticles.map((p) => (
-          <circle
-            key={p.id}
-            cx={p.x + p.vx * 0.05}
-            cy={p.y + p.vy * 0.05}
-            r={p.size}
-            fill={p.color}
-            className="animate-ping"
-            style={{ animationDuration: '0.6s' }}
-          />
-        ))}
-      </svg>
-
-      {/* 5 Speech Bubbles positioned exactly as in reference image */}
-      {BUBBLE_DATA.map((bubble) => {
-        const isPositive = positiveBubbles[bubble.id];
-        const displayText = isPositive ? bubble.positiveText : bubble.initialText;
-
-        return (
-          <div
-            key={bubble.id}
-            ref={(el) => (bubbleRefs.current[bubble.id] = el)}
-            onClick={() => handleBubbleClick(bubble.id)}
-            style={{
-              position: 'absolute',
-              left: `${bubble.leftPercent}%`,
-              top: `${bubble.topPercent}%`,
-              width: `${bubble.widthVw}vw`,
-              minWidth: '190px',
-              maxWidth: '290px',
-            }}
-            className="z-20 cursor-pointer transition-transform duration-300 hover:scale-[1.03]"
-          >
-            <div className="relative w-full">
-              {/* Dialogue Box Speech Bubble Image */}
-              <img
-                src="/projects/wand/speech.png"
-                alt="Speech bubble"
-                onLoad={updateCoordinates}
-                className="w-full h-auto object-contain drop-shadow-sm select-none pointer-events-none"
-              />
-
-              {/* Text inside Speech Bubble */}
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{
-                  top: '12%',
-                  bottom: '38%',
-                }}
-              >
-                <span
-                  key={displayText}
-                  className={`font-JustM tracking-wide transition-all duration-500 transform ${
-                    isPositive
-                      ? 'text-[#E52E2E] text-4xl md:text-5xl font-bold scale-110 drop-shadow-sm'
-                      : 'text-[#D62828] text-3xl md:text-4xl'
-                  }`}
+                {/* Text inside Speech Bubble */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
                   style={{
-                    fontFamily: "'Just Me Again Down Here', cursive, sans-serif",
+                    top: '12%',
+                    bottom: '38%',
                   }}
                 >
-                  {displayText}
-                </span>
+                  <span
+                    key={displayText}
+                    className={`font-JustM tracking-wide transition-all duration-500 transform ${isPositive
+                      ? 'text-[#E52E2E] text-4xl md:text-5xl font-bold scale-110 drop-shadow-sm'
+                      : 'text-[#D62828] text-3xl md:text-4xl'
+                      }`}
+                    style={{
+                      fontFamily: "'Just Me Again Down Here', cursive, sans-serif",
+                    }}
+                  >
+                    {displayText}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
       </div>
 
       {/* Boy sitting in bottom-left corner curled up */}

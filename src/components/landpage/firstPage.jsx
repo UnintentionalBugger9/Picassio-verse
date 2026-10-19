@@ -6,7 +6,7 @@ function FirstPage({ onGetStarted }) {
       {/* Floating Text block on the right half above rolling hills */}
       <div className="absolute right-10 sm:right-16 md:right-24 lg:right-32 top-[28%] md:top-[32%] flex flex-col items-center text-center gap-4 z-10 font-JustM">
         <h1 className="text-4xl sm:text-5xl md:text-6xl text-[#1E1E1E] leading-tight max-w-xl">
-          The Story of Happiness Through Empathy
+          The Story of Happiness and Curse of Anxiety
         </h1>
 
         <div
