@@ -46,24 +46,13 @@ function BeaconStory({ isMuted }) {
         },
       });
 
-      const isMobile = window.innerWidth < 768;
-
-      // House starts partially on left on desktop; on mobile enters linearly from bottom
-      if (isMobile) {
-        tl.fromTo(
-          houseRef.current,
-          { yPercent: 12, opacity: 0.85 },
-          { yPercent: 0, opacity: 1, duration: 1, ease: 'none' },
-          0
-        );
-      } else {
-        tl.fromTo(
-          houseRef.current,
-          { xPercent: -48 },
-          { xPercent: 0, duration: 1, ease: 'none' },
-          0
-        );
-      }
+      // House starts partially on left (shifted a little to the right), slides into center
+      tl.fromTo(
+        houseRef.current,
+        { xPercent: -48 },
+        { xPercent: 0, duration: 1, ease: 'none' },
+        0
+      );
 
       // Stage 1 text visible initially, fades out first half
       tl.to(
@@ -204,7 +193,7 @@ function BeaconStory({ isMuted }) {
         onClick={handleHouseClick}
         className={`absolute left-1/2 -translate-x-1/2 bottom-0 z-20 ${canClick && !awakened ? 'cursor-pointer' : ''}`}>
         <img src="/projects/beacon/orphanage.png" alt="Orphanage"
-          className="h-[44vh] sm:h-[50vh] md:h-[80vh] w-auto object-contain" />
+          className="h-[72vh] md:h-[80vh] w-auto object-contain" />
       </div>
 
       {/* Stage 3 — Grass at bottom */}
