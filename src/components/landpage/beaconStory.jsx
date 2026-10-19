@@ -76,6 +76,13 @@ function BeaconStory() {
     if (!canClick || awakened) return;
     setAwakened(true);
 
+    // Play orphanageSound ONCE when things start to assemble
+    try {
+      const audio = new Audio('/sounds/orphanageSound.mp3');
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (e) {}
+
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
     // Fade out stage 2 texts

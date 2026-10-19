@@ -14,6 +14,7 @@ import Footer from './components/footer/footer';
 import ProjectsModal from './components/landpage/projectsModal';
 import BottleAlert from './components/bottleAlert/bottleAlert';
 import EasterEgg from './components/easterEgg/easterEgg';
+import CursorEffects from './components/effects/cursorEffects';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -253,6 +254,9 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* Global Cursor Effects & Audio Layer */}
+      <CursorEffects equippedProject={equippedProject} />
     </div>
   );
 }
