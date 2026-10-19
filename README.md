@@ -1,4 +1,4 @@
-# Picassio-verse (Hax Baby) 🎨🍼
+# Picassio-verse 
 
 A story-driven, interactive crayon-art web experience chronicling **Picassio**—a creature of canvas navigating the fragile balance between anxiety, empathy, and joy.
 
@@ -16,48 +16,45 @@ To escape his own inner turmoil, Picassio pours his heart into drawing things th
 
 ## 🌟 Interactive Journey & Features
 
-### 🍼 1. The Milk Bottle Alert
+###  1. The Milk Bottle Alert
 When you first open the website, everything appears softly blurred. Picassio's milk bottle is empty, leaving him sad. 
 - Click the baby bottle to refill it with milk!
-- The blur lifts, resetting your view to the homepage with a welcoming sparkle.
+- The blur lifts, resetting your view to the homepage reflecting picassio has calmed down after drinking milk.
 
-### 🏡 2. Hope Heaven — The Orphan Beacon
+### 2. Hope Heaven — The Orphan Beacon
 As you scroll down to Venice, you encounter **Hope Heaven**—a solitary orphanage standing in an isolated corner of the city.
-- As you scroll, the orphanage slides smoothly into the center.
+- As you scroll, the orphanage slides into the center.
 - Click the orphanage to activate the **Beacon**: the scene blossoms with lush green lawns, streetlights, a friendly couple, a caregiver at a table, and a cheerful polka sky to ensure no orphan ever feels lonely again.
-- Plays custom ambient orphanage sound effects.
 
-### 🪄 3. The Dopamine Wand & Severed Ties
+
+###  3. The Dopamine Wand & Severed Ties
 Below the orphanage, you meet a young boy curled up in despair, tethered to dark doubts by entangled red threads:
 - The speech bubbles harbor heavy thoughts: *future?*, *Parents?*, *Money?*, *friends?*, *Love?*.
-- Click on any thread to sever it: in an instant, all ties to negativity snap, transforming the doubts into positive affirmations: *success*, *family*, *wealth*, *friendship*, *loved*.
+- Click on any thread to sever it using the dopamine wand: in an instant, all ties to negativity snap, transforming the doubts into positive affirmations: *success*, *family*, *wealth*, *friendship*, *loved*.
 
-### 🧭 4. The About & Life Journey
+###  4. The About & Life Journey
 Click **About** or **Get Started** to glide horizontally through Picassio's world:
-1. **Picassio Profile**: Learn about his origin, his personality, and his self-appointed profession as Earth's *Dopamine Manager*.
-2. **Job (Acts of Kindness)**:
+1. **Picassio Profile**: Learn about his origin, his personality, and his profession as Earth's *Dopamine Manager*.
+2. **Job (Examples)**:
    - *The Repaired Jug*: Restoring a weeping girl's broken plant watering jug.
-   - *The Cracked Toy*: Teaching a boy to cherish his belongings through blooming flowers.
+   - *The Cracked Toy*: Teaching a boy to cherish his belongings through lesson of losing things.
    - *The Floral Gift*: Comforting a grieving widow with memories of her late husband's flowers.
-3. **The Story**: Picassio's philosophical purpose and his mission of spreading empathy.
+3. **The Story**: Picassio's philosophical purpose and looking after people of earth.
 
-### 🛠️ 5. Projects Modal & Custom Cursors
+###  5. Projects Modal & Custom Cursors
 Open **Projects** from the navbar to equip Picassio's signature creations:
 - **The Orphan Beacon**: Transforms orphanages into loving communities. *(Equips the Beacon Cursor with interactive pixel-trail bursts)*.
 - **The Dopamine Wand**: Dispenses sudden bursts of comforting joy. *(Equips the Wand Cursor with luminous glow flares)*.
 - **The Repair Gem**: Reverses time to mend broken objects. *(Equips the Gem Cursor with magic sparkle stars)*.
 
-### 🔊 6. Sound & Mute Toggle
+###  6. Sound & Mute Toggle
 Toggle audio effects anytime with the hand-drawn Sound button in the top navigation bar.
 
-### 📱 7. Responsive & Mobile-Friendly
-Features an adaptive layout with a custom hand-drawn **☰ Menu** hamburger drawer on mobile devices, maintaining the original crayon font aesthetics.
 
----
 
-## 🥚 How to Unlock the Secret Easter Egg
+##  How to Unlock the Secret Easter Egg
 
-Follow these steps to find Picassio's secret confession:
+Follow these steps to find Picassio's thoughts:
 
 1. Click **Projects** in the navigation bar.
 2. Navigate to the 3rd project: **The Repair Gem**.
