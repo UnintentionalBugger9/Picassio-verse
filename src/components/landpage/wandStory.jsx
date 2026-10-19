@@ -1,4 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // 5 speech bubbles matching exact positions in reference image
 const BUBBLE_DATA = [
@@ -56,11 +60,53 @@ const THREADS_CONFIG = [
 
 function WandStory() {
   const containerRef = useRef(null);
+  const introTextRef = useRef(null);
+  const interactiveLayerRef = useRef(null);
   const [bubbleCoords, setBubbleCoords] = useState({});
   const [severedThreads, setSeveredThreads] = useState({});
   const [positiveBubbles, setPositiveBubbles] = useState({});
   const [severParticles, setSeverParticles] = useState([]);
   const bubbleRefs = useRef({});
+
+  // ScrollTrigger pinned timeline: first show paragraph, on further scroll show threads and bubbles
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: '+=1400',
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+        },
+      });
+
+      // Paragraph starts visible, smoothly fades out on scroll
+      if (introTextRef.current) {
+        tl.to(
+          introTextRef.current,
+          { opacity: 0, y: -25, duration: 0.35, ease: 'power1.out' },
+          0.2
+        );
+      }
+
+      // Interactive layer (threads & speech bubbles) fades in and becomes interactive
+      if (interactiveLayerRef.current) {
+        tl.fromTo(
+          interactiveLayerRef.current,
+          { opacity: 0, pointerEvents: 'none' },
+          { opacity: 1, pointerEvents: 'auto', duration: 0.45, ease: 'power1.out' },
+          0.5
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
 
   // Calculate coordinates both geometrically and from DOM
   const updateCoordinates = useCallback(() => {
@@ -110,19 +156,19 @@ function WandStory() {
 
   // Handle clicking on a thread to severe it
   const handleSeverThread = (threadId, clickEvent) => {
-    if (severedThreads[threadId]) return;
-
-    // Record severed thread
-    setSeveredThreads((prev) => ({ ...prev, [threadId]: true }));
+    // When one thread is clicked on and severed, all other threads get severed automatically
+    const allSevered = {};
+    THREADS_CONFIG.forEach((t) => {
+      allSevered[t.id] = true;
+    });
+    setSeveredThreads(allSevered);
 
     // Replace current words in speech with positive versions
-    setPositiveBubbles((prev) => {
-      const next = { ...prev };
-      BUBBLE_DATA.forEach((b) => {
-        next[b.id] = true;
-      });
-      return next;
+    const allPositive = {};
+    BUBBLE_DATA.forEach((b) => {
+      allPositive[b.id] = true;
     });
+    setPositiveBubbles(allPositive);
 
     // Particle burst at cut position
     if (clickEvent && containerRef.current) {
@@ -170,32 +216,54 @@ function WandStory() {
       className="relative w-full h-screen bg-[#FEF8E6] overflow-hidden select-none"
       style={{ minHeight: '100vh' }}
     >
-      {/* SVG filter for realistic thread yarn texture */}
-      <svg className="absolute w-0 h-0" aria-hidden="true">
-        <defs>
-          <filter id="thread-yarn-texture" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.65"
-              numOctaves="3"
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="1.8"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
+      {/* Scene-specific geometric background at 50% opacity */}
+      <img
+        src="/projects/wand/bg.png"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
+      />
 
-      {/* SVG Canvas for proper thick red threads */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-10"
-        style={{ overflow: 'visible' }}
+      {/* Stage 1: Paragraph to the right of the boy talking about how a depressed boy severed his ties with negativity */}
+      <div
+        ref={introTextRef}
+        className="absolute left-[30%] md:left-[36%] lg:left-[40%] top-[24%] md:top-[28%] w-[60%] md:w-[52%] max-w-2xl z-20 pointer-events-none font-JustM"
       >
+        <p className="text-3xl md:text-4xl lg:text-[2.6rem] text-[#1E1E1E] leading-relaxed">
+          Trapped under the weight of anxiety, a depressed boy felt tangled in a web of loneliness and sorrow. Every negative thought bound him deeper into despair. But with a single spark of hope, he severed his ties with negativity—breaking every tether to rediscover joy, friendship, and love.
+        </p>
+      </div>
+
+      {/* Stage 2: Interactive Threads & Speech Bubbles (revealed on further scroll) */}
+      <div
+        ref={interactiveLayerRef}
+        className="absolute inset-0 w-full h-full z-10 opacity-0 pointer-events-none"
+      >
+        {/* SVG filter for realistic thread yarn texture */}
+        <svg className="absolute w-0 h-0" aria-hidden="true">
+          <defs>
+            <filter id="thread-yarn-texture" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.65"
+                numOctaves="3"
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="1.8"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+          </defs>
+        </svg>
+
+        {/* SVG Canvas for proper thick red threads */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
+          style={{ overflow: 'visible' }}
+        >
         {THREADS_CONFIG.map((thread) => {
           const fromPt = bubbleCoords[thread.from];
           const toPt = bubbleCoords[thread.to];
@@ -443,6 +511,7 @@ function WandStory() {
           </div>
         );
       })}
+      </div>
 
       {/* Boy sitting in bottom-left corner curled up */}
       <div className="absolute left-0 bottom-0 z-20 pointer-events-none select-none">

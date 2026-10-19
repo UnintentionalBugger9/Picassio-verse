@@ -127,39 +127,59 @@ function ProjectsModal({ isOpen, onClose, equippedProject: propEquipped, setEqui
           {currentProject.description}
         </p>
 
-        {/* Buttons Row */}
+        {/* Buttons Row with buttonsReal image borders */}
         <div className="flex items-center justify-center gap-5 md:gap-8">
           {/* Prev Button (shown on project 2 and 3) */}
           {currentIndex > 0 && (
-            <button
+            <div
               onClick={handlePrev}
-              className="px-8 py-2 md:py-2.5 rounded-full bg-[#FFBCA1] border-[3px] border-[#3E3E3E] text-3xl md:text-4xl text-[#1E1E1E] font-JustM hover:opacity-90 active:scale-95 transition-all shadow-sm"
-              style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
             >
-              Prev &gt;
-            </button>
+              <div className="absolute inset-1 rounded-full bg-[#FFBCA1]"></div>
+              <span
+                className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
+                style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              >
+                Prev &gt;
+              </span>
+              <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
+            </div>
           )}
 
           {/* Equip / Equipped Button */}
-          <button
+          <div
             onClick={handleEquipToggle}
-            className={`px-8 py-2 md:py-2.5 rounded-full border-[3px] border-[#3E3E3E] text-3xl md:text-4xl text-[#1E1E1E] font-JustM hover:opacity-90 active:scale-95 transition-all shadow-sm ${
-              isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
-            }`}
-            style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+            className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
           >
-            {isEquipped ? 'Equipped' : 'Equip'}
-          </button>
+            <div
+              className={`absolute inset-1 rounded-full transition-colors ${
+                isEquipped ? 'bg-[#7BBBEB]' : 'bg-[#FFA2CE]'
+              }`}
+            ></div>
+            <span
+              className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
+              style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+            >
+              {isEquipped ? 'Equipped' : 'Equip'}
+            </span>
+            <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
+          </div>
 
           {/* Next Button (shown on project 1 and 2) */}
           {currentIndex < PROJECTS.length - 1 && (
-            <button
+            <div
               onClick={handleNext}
-              className="px-8 py-2 md:py-2.5 rounded-full bg-[#FDFBF7] border-[3px] border-[#3E3E3E] text-3xl md:text-4xl text-[#1E1E1E] font-JustM hover:opacity-90 active:scale-95 transition-all shadow-sm"
-              style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              className="relative h-[56px] px-8 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
             >
-              Next &gt;
-            </button>
+              <div className="absolute inset-1 rounded-full bg-[#FDFBF7]"></div>
+              <span
+                className="relative z-10 text-3xl md:text-4xl text-[#1E1E1E] font-JustM pt-0.5"
+                style={{ fontFamily: "'Just Me Again Down Here', cursive, sans-serif" }}
+              >
+                Next &gt;
+              </span>
+              <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
+            </div>
           )}
         </div>
       </div>

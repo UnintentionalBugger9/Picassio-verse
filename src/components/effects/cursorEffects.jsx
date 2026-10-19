@@ -8,14 +8,20 @@ import React, { useEffect, useRef } from 'react';
  * - Gem cursor: Magic cursor sparkle (21st.dev Magic Cursor style) + gemSound.mp3
  * - Scene-scoped cursors: beaconCursor for beaconStory, wandCursor for wandStory, default after
  */
-function CursorEffects({ equippedProject }) {
+function CursorEffects({ equippedProject, isMuted }) {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const animFrameRef = useRef(null);
   const lastMoveRef = useRef({ x: 0, y: 0, time: 0 });
 
+  const isMutedRef = useRef(isMuted);
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
+
   // Sound player helper
   const playAudio = (soundPath) => {
+    if (isMutedRef.current) return;
     try {
       const audio = new Audio(soundPath);
       audio.currentTime = 0;
@@ -31,7 +37,12 @@ function CursorEffects({ equippedProject }) {
     if (equippedProject === 'wand') return 'wand';
     if (equippedProject === 'beacon') return 'beacon';
 
-    // Check if target is inside beacon or wand sections
+    // Check if target is inside bottle-alert, beacon or wand sections
+    const bottleAlertEl = document.getElementById('bottle-alert-container');
+    if (bottleAlertEl && target && (bottleAlertEl === target || bottleAlertEl.contains(target))) {
+      return 'beacon';
+    }
+
     const beaconEl = document.getElementById('beacon-section');
     const wandEl = document.getElementById('wand-section');
 

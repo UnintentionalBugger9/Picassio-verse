@@ -24,6 +24,8 @@ function App() {
   const [showBottleAlert, setShowBottleAlert] = useState(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState(false);
   const [equippedProject, setEquippedProject] = useState(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isAboutMode, setIsAboutMode] = useState(false);
 
   const horizontalRef = useRef(null);
   const trackRef = useRef(null);
@@ -105,34 +107,31 @@ function App() {
     }
   };
 
-  // "Get Started" => scroll to the horizontal section (Introduction)
+  // "Get Started" => open About / Story flow (Introduction -> Job -> Story -> Footer)
   const handleGetStarted = () => {
-    const el = horizontalRef.current;
-    if (el) {
-      gsap.to(window, {
-        scrollTo: { y: el, autoKill: false },
-        duration: 1.2,
-        ease: 'power2.inOut',
-      });
-    }
+    setIsAboutMode(true);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   };
 
   // Navbar handler
   const handleNav = (i) => {
     if (i === 0) {
-      // Home: scroll to top
-      gsap.to(window, { scrollTo: { y: 0 }, duration: 1, ease: 'power2.inOut' });
+      // Home: return to normal flow and scroll to top
+      setIsAboutMode(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     } else if (i === 2) {
-      // Projects: open projects page
+      // Projects: open projects page modal
       setIsProjectsOpen(true);
     } else if (i === 3) {
-      // About: scroll to Story panel (index 2 in horizontal)
-      scrollToHPanel(2);
+      // About: open about story flow
+      setIsAboutMode(true);
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
   };
 
-  // Setup horizontal scroll for the panels section
+  // Setup horizontal scroll for the about panels section
   useEffect(() => {
+    if (!isAboutMode) return;
     const container = horizontalRef.current;
     const track = trackRef.current;
     if (!container || !track) return;
@@ -158,65 +157,76 @@ function App() {
     }, container);
 
     return () => ctx.revert();
-  }, []);
+  }, [isAboutMode]);
 
   return (
     <div className="relative bg-[#FEF8E6] overflow-x-hidden min-h-screen">
       {/* Blurred page container when initially opening website */}
       <div className={`transition-all duration-700 ${isBlurred ? 'filter blur-[8px]' : ''}`}>
-        {/* Fixed Navbar */}
-        <Navbar onNavigate={handleNav} />
+        {/* Fixed Navbar with Sound/Mute Toggle */}
+        <Navbar
+          onNavigate={handleNav}
+          isMuted={isMuted}
+          onToggleMute={() => setIsMuted((prev) => !prev)}
+        />
 
         {/* 
-          Page flow (vertical):
-          1. FirstPage (100vh) — hero landing
-          2. BeaconStory (pinned, scroll-driven orphanage animation)
-          3. WandStory (boy with speech bubbles and threads)
-          4. Horizontal scroll section (Introduction → Job → Story → Footer)
-          
-          "Get Started" on FirstPage scrolls user to #4.
-          Normal downward scroll from FirstPage goes into BeaconStory first.
+          Page Flow:
+          1. Normal scroll flow: FirstPage -> BeaconStory (orphanage) -> WandStory (boy) -> Footer
+          2. About flow (opened by 'Get Started' or 'About'): Introduction -> Job -> Story -> Footer
         */}
-
-        {/* 1. FirstPage — full viewport */}
-        <section className="w-full h-screen">
-          <FirstPage onGetStarted={handleGetStarted} />
-        </section>
-
-        {/* 2. BeaconStory — scroll-pinned orphanage section */}
-        <section id="beacon-section">
-          <BeaconStory />
-        </section>
-
-        {/* 3. WandStory — child scene with speech bubbles and threads */}
-        <section id="wand-section">
-          <WandStory />
-        </section>
-
-        {/* 4. Horizontal scroll panels */}
-        <section ref={horizontalRef} className="w-screen h-screen overflow-hidden relative">
-          <div
-            ref={trackRef}
-            className="flex flex-row h-full will-change-transform"
-            style={{ width: `${totalPanels * 100}vw` }}
-          >
-            <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
-              <Introduction />
+        {isAboutMode ? (
+          /* About Flow: Introduction -> Job -> Story -> Footer */
+          <section ref={horizontalRef} className="w-screen h-screen overflow-hidden relative">
+            <div
+              ref={trackRef}
+              className="flex flex-row h-full will-change-transform"
+              style={{ width: `${totalPanels * 100}vw` }}
+            >
+              <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+                <Introduction />
+              </div>
+              <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+                <Job />
+              </div>
+              <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+                <Story />
+              </div>
+              <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+                <Footer
+                  isGemEquipped={equippedProject === 'gem'}
+                  onOpenEasterEgg={() => setIsEasterEggOpen(true)}
+                />
+              </div>
             </div>
-            <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
-              <Job />
-            </div>
-            <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
-              <Story />
-            </div>
-            <div className="w-screen h-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+          </section>
+        ) : (
+          /* Normal Flow: FirstPage -> BeaconStory -> WandStory -> Footer */
+          <>
+            {/* 1. FirstPage — full viewport */}
+            <section className="w-full h-screen">
+              <FirstPage onGetStarted={handleGetStarted} />
+            </section>
+
+            {/* 2. BeaconStory — scroll-pinned orphanage section */}
+            <section id="beacon-section">
+              <BeaconStory isMuted={isMuted} />
+            </section>
+
+            {/* 3. WandStory — child scene with speech bubbles and threads */}
+            <section id="wand-section">
+              <WandStory />
+            </section>
+
+            {/* 4. Footer in normal scroll path */}
+            <section id="footer-section" className="w-full h-screen">
               <Footer
                 isGemEquipped={equippedProject === 'gem'}
                 onOpenEasterEgg={() => setIsEasterEggOpen(true)}
               />
-            </div>
-          </div>
-        </section>
+            </section>
+          </>
+        )}
       </div>
 
       {/* Projects Modal / Page */}
@@ -243,20 +253,19 @@ function App() {
         </div>
       )}
 
-      {/* Initial BottleAlert popup (opens in 2-3s after page opens blurred) */}
+      {/* Initial BottleAlert popup (occupies entire window with beaconCursor effects) */}
       {showBottleAlert && (
         <div
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/15 select-none overflow-hidden"
+          id="bottle-alert-container"
+          className="fixed inset-0 z-[120] bg-[#FEF8E6] w-full h-full select-none overflow-hidden flex items-center justify-center cursor-[url('/cursors/beaconCursor.png'),_auto]"
           onClick={handleBottleAlertClick}
         >
-          <div className="bg-[#FEF8E6] p-4 md:p-8 rounded-3xl shadow-2xl max-w-4xl w-full mx-4 border-2 border-[#1E1E1E] flex items-center justify-center">
-            <BottleAlert />
-          </div>
+          <BottleAlert />
         </div>
       )}
 
       {/* Global Cursor Effects & Audio Layer */}
-      <CursorEffects equippedProject={equippedProject} />
+      <CursorEffects equippedProject={equippedProject} isMuted={isMuted} />
     </div>
   );
 }

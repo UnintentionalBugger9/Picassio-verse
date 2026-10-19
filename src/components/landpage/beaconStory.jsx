@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function BeaconStory() {
+function BeaconStory({ isMuted }) {
   const containerRef = useRef(null);
   const houseRef = useRef(null);
   const stage1Ref = useRef(null);
@@ -72,16 +72,23 @@ function BeaconStory() {
     return () => ctx.revert();
   }, []);
 
+  const isMutedRef = useRef(isMuted);
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
+
   const handleHouseClick = () => {
     if (!canClick || awakened) return;
     setAwakened(true);
 
-    // Play orphanageSound ONCE when things start to assemble
-    try {
-      const audio = new Audio('/sounds/orphanageSound.mp3');
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-    } catch (e) {}
+    // Play orphanageSound ONCE when things start to assemble (unless muted)
+    if (!isMutedRef.current) {
+      try {
+        const audio = new Audio('/sounds/orphanageSound.mp3');
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      } catch (e) {}
+    }
 
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
@@ -143,8 +150,11 @@ function BeaconStory() {
       {/* Stage 1 text — right side */}
       <div ref={stage1Ref}
         className="absolute right-8 md:right-16 lg:right-24 top-[18%] w-[45%] max-w-2xl z-20 pointer-events-none font-JustM">
-        <div className="inline-block px-5 py-1 rounded-full bg-[#9BA3CC] border-2 border-[#545454] mb-5">
-          <span className="text-white text-3xl pt-1">Hope Heaven</span>
+        {/* Hope Heaven pill with buttonsReal.png border */}
+        <div className="relative inline-flex items-center justify-center h-[52px] px-6 mb-5 select-none">
+          <div className="absolute inset-1 rounded-full bg-[#9BA3CC]"></div>
+          <span className="relative z-10 text-white text-3xl font-JustM pt-1">Hope Heaven</span>
+          <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
         </div>
         <p className="text-3xl md:text-4xl lg:text-[2.7rem] text-[#1E1E1E] leading-relaxed">
           Hope Heaven is an orphanage located in a part of venice where very few people have houses very few people live around and the place feels like the only trace of human life in that area
