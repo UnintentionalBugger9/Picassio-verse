@@ -183,6 +183,11 @@ function CursorEffects({ equippedProject, isMuted }) {
       const cursorType = getActiveCursorType(e.target);
       if (!cursorType) return;
 
+      // Cap maximum active particles to preserve 60-120fps
+      if (particlesRef.current.length > 50) {
+        particlesRef.current.splice(0, particlesRef.current.length - 50);
+      }
+
       const x = e.clientX;
       const y = e.clientY;
 

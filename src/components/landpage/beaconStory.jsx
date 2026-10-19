@@ -19,6 +19,7 @@ function BeaconStory({ isMuted }) {
 
   const [canClick, setCanClick] = useState(false);
   const [awakened, setAwakened] = useState(false);
+  const awakenedRef = useRef(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -35,17 +36,34 @@ function BeaconStory({ isMuted }) {
           anticipatePin: 1,
           onUpdate: (self) => {
             setCanClick(self.progress > 0.65);
+            if (awakenedRef.current) {
+              gsap.set([stage2LeftRef.current, stage2RightRef.current], {
+                opacity: 0,
+                display: 'none',
+              });
+            }
           },
         },
       });
 
-      // House starts partially on left (shifted a little to the right), slides into center
-      tl.fromTo(
-        houseRef.current,
-        { xPercent: -48 },
-        { xPercent: 0, duration: 1, ease: 'none' },
-        0
-      );
+      const isMobile = window.innerWidth < 768;
+
+      // House starts partially on left on desktop; on mobile enters linearly from bottom
+      if (isMobile) {
+        tl.fromTo(
+          houseRef.current,
+          { yPercent: 12, opacity: 0.85 },
+          { yPercent: 0, opacity: 1, duration: 1, ease: 'none' },
+          0
+        );
+      } else {
+        tl.fromTo(
+          houseRef.current,
+          { xPercent: -48 },
+          { xPercent: 0, duration: 1, ease: 'none' },
+          0
+        );
+      }
 
       // Stage 1 text visible initially, fades out first half
       tl.to(
@@ -79,6 +97,7 @@ function BeaconStory({ isMuted }) {
 
   const handleHouseClick = () => {
     if (!canClick || awakened) return;
+    awakenedRef.current = true;
     setAwakened(true);
 
     // Play orphanageSound ONCE when things start to assemble (unless muted)
@@ -92,14 +111,15 @@ function BeaconStory({ isMuted }) {
 
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-    // Fade out stage 2 texts
-    tl.to([stage2LeftRef.current, stage2RightRef.current], {
-      opacity: 0, duration: 0.4,
+    // Instantly hide and kill stage 2 left and right texts
+    gsap.set([stage2LeftRef.current, stage2RightRef.current], {
+      opacity: 0,
+      display: 'none',
     });
 
     // 1. Grass
     tl.fromTo(grassRef.current,
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.8 },
       '+=0.1'
     );
@@ -147,75 +167,76 @@ function BeaconStory({ isMuted }) {
       <img ref={polkaRef} src="/projects/beacon/polka.png" alt=""
         className="absolute inset-0 w-full h-full object-cover opacity-0 z-0 pointer-events-none" />
 
-      {/* Stage 1 text — right side */}
+      {/* Stage 1 text: Linear centered at top on mobile, right side on desktop */}
       <div ref={stage1Ref}
-        className="absolute right-8 md:right-16 lg:right-24 top-[18%] w-[45%] max-w-2xl z-20 pointer-events-none font-JustM">
+        className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 lg:right-24 top-10 sm:top-14 md:top-[18%] w-[90%] md:w-[45%] max-w-2xl z-20 pointer-events-none font-JustM flex flex-col items-center md:items-start text-center md:text-left">
         {/* Hope Heaven button matching sound button design */}
-        <div className="relative text-center h-[60px] w-[160px] inline-block mb-5 select-none">
-          <div className="bg-[#9BA3CC] h-[50px] pt-1.5 mt-1 rounded-4xl w-[150px] relative left-1">
-            <h1 className="text-white text-3xl font-JustM">Hope Heaven</h1>
+        <div className="relative text-center h-[54px] md:h-[60px] w-[140px] md:w-[160px] inline-block mb-3 md:mb-5 select-none">
+          <div className="bg-[#9BA3CC] h-[45px] md:h-[50px] pt-1 md:pt-1.5 mt-1 rounded-4xl w-[130px] md:w-[150px] relative left-1">
+            <h1 className="text-white text-2xl md:text-3xl font-JustM">Hope Heaven</h1>
           </div>
           <img src="/buttons/buttonsReal.png" className="absolute inset-0 w-full h-full brightness-40 pointer-events-none" alt="" />
         </div>
-        <p className="text-3xl md:text-4xl lg:text-[2.7rem] text-[#1E1E1E] leading-relaxed">
+        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.7rem] text-[#1E1E1E] leading-relaxed">
           Hope Heaven is an orphanage tucked away in a remote part of Venice, surrounded by very few homes and almost no signs of human life. Its presence feels like the only trace of humanity in an otherwise quiet and isolated corner of city.
         </p>
       </div>
 
-      {/* Stage 2 left text */}
+      {/* Stage 2 text: Linear stacked above house on mobile, left & right flanking on desktop */}
       <div ref={stage2LeftRef}
-        className="absolute left-6 md:left-12 lg:left-20 top-[30%] w-[200px] md:w-[260px] z-20 pointer-events-none font-JustM opacity-0">
-        <p className="text-3xl md:text-4xl text-[#1E1E1E] leading-snug">
+        style={{ display: awakened ? 'none' : undefined }}
+        className={`absolute left-1/2 -translate-x-1/2 md:left-6 lg:left-20 md:translate-x-0 top-12 sm:top-14 md:top-[30%] w-[90%] md:w-[260px] max-w-sm md:max-w-none text-center md:text-left z-20 pointer-events-none font-JustM ${awakened ? '!hidden !opacity-0' : 'opacity-0'}`}>
+        <p className="text-2xl sm:text-3xl md:text-4xl text-[#1E1E1E] leading-snug">
           Picassio wants to bless this place with life. The children should nurture in joy he yearns
         </p>
       </div>
 
-      {/* Stage 2 right text */}
       <div ref={stage2RightRef}
-        className="absolute right-6 md:right-12 lg:right-20 top-[26%] w-[220px] md:w-[280px] z-20 pointer-events-none font-JustM opacity-0">
-        <p className="text-3xl md:text-4xl text-[#1E1E1E] leading-snug">
+        style={{ display: awakened ? 'none' : undefined }}
+        className={`absolute left-1/2 -translate-x-1/2 md:left-auto md:right-6 lg:right-20 md:translate-x-0 top-28 sm:top-32 md:top-[26%] w-[90%] md:w-[280px] max-w-sm md:max-w-none text-center md:text-left z-20 pointer-events-none font-JustM ${awakened ? '!hidden !opacity-0' : 'opacity-0'}`}>
+        <p className="text-2xl sm:text-3xl md:text-4xl text-[#1E1E1E] leading-snug">
           Use the Beacon by clicking on orphanage to blossom a parenthood environment around these kids
         </p>
       </div>
 
-      {/* House — positioned at center-bottom, GSAP slides xPercent from -70 to 0 */}
+      {/* House — positioned at center-bottom */}
       <div ref={houseRef}
         onClick={handleHouseClick}
         className={`absolute left-1/2 -translate-x-1/2 bottom-0 z-20 ${canClick && !awakened ? 'cursor-pointer' : ''}`}>
         <img src="/projects/beacon/orphanage.png" alt="Orphanage"
-          className="h-[72vh] md:h-[80vh] w-auto object-contain" />
+          className="h-[44vh] sm:h-[50vh] md:h-[80vh] w-auto object-contain" />
       </div>
 
       {/* Stage 3 — Grass at bottom */}
       <img ref={grassRef} src="/projects/beacon/grass.png" alt=""
-        className="absolute bottom-0 left-0 w-full h-auto object-contain object-bottom opacity-0 z-10 pointer-events-none" />
+        className="absolute -bottom-4 sm:-bottom-8 md:-bottom-12 lg:-bottom-16 left-0 w-full h-auto object-contain object-bottom opacity-0 z-10 pointer-events-none" />
 
       {/* Stage 3 — Lights on right */}
       <div ref={lightsRef}
-        className="absolute right-[10%] bottom-0 z-30 opacity-0 pointer-events-none">
+        className="absolute right-[2%] md:right-[10%] bottom-0 z-30 opacity-0 pointer-events-none">
         <img src="/projects/beacon/lights.png" alt="Streetlight"
-          className="h-[300px] md:h-[360px] w-auto object-contain" />
+          className="h-[180px] sm:h-[240px] md:h-[360px] w-auto object-contain" />
       </div>
 
       {/* Stage 3 — Couple on right of house */}
       <div ref={coupleRef}
-        className="absolute right-[22%] bottom-[4%] z-30 opacity-0 pointer-events-none">
+        className="absolute right-[12%] md:right-[22%] bottom-[2%] md:bottom-[4%] z-30 opacity-0 pointer-events-none">
         <img src="/projects/beacon/couple.png" alt="Couple"
-          className="h-[170px] md:h-[210px] w-auto object-contain" />
+          className="h-[95px] sm:h-[130px] md:h-[210px] w-auto object-contain" />
       </div>
 
       {/* Stage 3 — Table on left of house */}
       <div ref={tableRef}
-        className="absolute left-[22%] bottom-[3%] z-30 opacity-0 pointer-events-none">
+        className="absolute left-[12%] md:left-[22%] bottom-[2%] md:bottom-[3%] z-30 opacity-0 pointer-events-none">
         <img src="/projects/beacon/table.png" alt="Table"
-          className="h-[170px] md:h-[210px] w-auto object-contain" />
+          className="h-[95px] sm:h-[130px] md:h-[210px] w-auto object-contain" />
       </div>
 
       {/* Stage 3 — Man on far left */}
       <div ref={manRef}
-        className="absolute left-[8%] bottom-[4%] z-30 opacity-0 pointer-events-none">
+        className="absolute left-[2%] md:left-[8%] bottom-[2%] md:bottom-[4%] z-30 opacity-0 pointer-events-none">
         <img src="/projects/beacon/man.png" alt="Man"
-          className="h-[190px] md:h-[230px] w-auto object-contain" />
+          className="h-[105px] sm:h-[145px] md:h-[230px] w-auto object-contain" />
       </div>
 
     </div>

@@ -4,8 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 5 speech bubbles matching exact positions in reference image
-const BUBBLE_DATA = [
+// 5 speech bubbles matching exact positions on desktop
+const DESKTOP_BUBBLES = [
   {
     id: 'future',
     initialText: 'future?',
@@ -48,6 +48,50 @@ const BUBBLE_DATA = [
   },
 ];
 
+// 5 speech bubbles optimized for mobile screens (<768px) to prevent overlap & overflow
+const MOBILE_BUBBLES = [
+  {
+    id: 'future',
+    initialText: 'future?',
+    positiveText: 'success',
+    leftPercent: 6,
+    topPercent: 8,
+    widthVw: 29,
+  },
+  {
+    id: 'friends',
+    initialText: 'friends?',
+    positiveText: 'friendship',
+    leftPercent: 60,
+    topPercent: 8,
+    widthVw: 29,
+  },
+  {
+    id: 'money',
+    initialText: 'Money?',
+    positiveText: 'wealth',
+    leftPercent: 34,
+    topPercent: 26,
+    widthVw: 29,
+  },
+  {
+    id: 'love',
+    initialText: 'Love?',
+    positiveText: 'loved',
+    leftPercent: 62,
+    topPercent: 44,
+    widthVw: 29,
+  },
+  {
+    id: 'parents',
+    initialText: 'Parents?',
+    positiveText: 'family',
+    leftPercent: 32,
+    topPercent: 62,
+    widthVw: 29,
+  },
+];
+
 // Threads connecting the speech bubbles
 const THREADS_CONFIG = [
   { id: 't-future-parents', from: 'future', to: 'parents', sag: 22 },
@@ -66,7 +110,20 @@ function WandStory() {
   const [severedThreads, setSeveredThreads] = useState({});
   const [positiveBubbles, setPositiveBubbles] = useState({});
   const [severParticles, setSeverParticles] = useState([]);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
   const bubbleRefs = useRef({});
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const activeBubbles = isMobile ? MOBILE_BUBBLES : DESKTOP_BUBBLES;
 
   // ScrollTrigger pinned timeline: first show paragraph, on further scroll show threads and bubbles
   useEffect(() => {
@@ -114,9 +171,11 @@ function WandStory() {
     const cRect = containerRef.current.getBoundingClientRect();
     const w = cRect.width || window.innerWidth;
     const h = cRect.height || window.innerHeight;
+    const mobile = w < 768;
+    const list = mobile ? MOBILE_BUBBLES : DESKTOP_BUBBLES;
     const coords = {};
 
-    BUBBLE_DATA.forEach((b) => {
+    list.forEach((b) => {
       const el = bubbleRefs.current[b.id];
       if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
         const bRect = el.getBoundingClientRect();
@@ -127,8 +186,10 @@ function WandStory() {
       } else {
         // Geometric calculation fallback
         let bw = (b.widthVw / 100) * w;
-        if (bw < 190) bw = 190;
-        if (bw > 290) bw = 290;
+        const minW = mobile ? 105 : 190;
+        const maxW = mobile ? 135 : 290;
+        if (bw < minW) bw = minW;
+        if (bw > maxW) bw = maxW;
         const bh = bw * (1024 / 1536);
         const bx = (b.leftPercent / 100) * w;
         const by = (b.topPercent / 100) * h;
@@ -152,7 +213,7 @@ function WandStory() {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [updateCoordinates]);
+  }, [updateCoordinates, isMobile]);
 
   // Handle clicking on a thread to severe it
   const handleSeverThread = (threadId, clickEvent) => {
@@ -223,12 +284,12 @@ function WandStory() {
         className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0"
       />
 
-      {/* Stage 1: Paragraph to the right of the boy talking about how a depressed boy severed his ties with negativity */}
+      {/* Stage 1: Paragraph to the right of the boy on desktop; centered above boy on mobile */}
       <div
         ref={introTextRef}
-        className="absolute left-[30%] md:left-[36%] lg:left-[40%] top-[24%] md:top-[28%] w-[60%] md:w-[52%] max-w-2xl z-20 pointer-events-none font-JustM"
+        className="absolute left-4 right-4 md:left-[36%] lg:left-[40%] top-14 sm:top-20 md:top-[28%] w-auto md:w-[52%] max-w-2xl z-20 pointer-events-none font-JustM text-center md:text-left"
       >
-        <p className="text-3xl md:text-4xl lg:text-[2.6rem] text-[#1E1E1E] leading-relaxed">
+        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] text-[#1E1E1E] leading-relaxed">
           A teenage mind, weighed down by uncertainty about the future and the things that matter most, was consumed by anxiety. Picassio severed those tangled threads with his wand, freeing the boy from the weight of his worries and bringing him a much-needed spark of joy and dopamine.
         </p>
       </div>
@@ -456,8 +517,8 @@ function WandStory() {
           ))}
         </svg>
 
-        {/* 5 Speech Bubbles positioned exactly as in reference image */}
-        {BUBBLE_DATA.map((bubble) => {
+        {/* 5 Speech Bubbles positioned responsively on mobile vs desktop */}
+        {activeBubbles.map((bubble) => {
           const isPositive = positiveBubbles[bubble.id];
           const displayText = isPositive ? bubble.positiveText : bubble.initialText;
 
@@ -470,9 +531,9 @@ function WandStory() {
                 position: 'absolute',
                 left: `${bubble.leftPercent}%`,
                 top: `${bubble.topPercent}%`,
-                width: `${bubble.widthVw}vw`,
-                minWidth: '190px',
-                maxWidth: '290px',
+                width: isMobile ? '29vw' : `${bubble.widthVw}vw`,
+                minWidth: isMobile ? '105px' : '190px',
+                maxWidth: isMobile ? '135px' : '290px',
               }}
               className="z-20 cursor-pointer transition-transform duration-300 hover:scale-[1.03]"
             >
@@ -495,7 +556,7 @@ function WandStory() {
                 >
                   <span
                     key={displayText}
-                    className="font-JustM tracking-wide text-[#D62828] text-3xl md:text-4xl"
+                    className="font-JustM tracking-wide text-[#D62828] text-xl sm:text-2xl md:text-4xl"
                     style={{
                       fontFamily: "'Just Me Again Down Here', cursive, sans-serif",
                     }}
@@ -514,7 +575,7 @@ function WandStory() {
         <img
           src="/projects/wand/boy.png"
           alt="Curled up child"
-          className="h-[34vh] md:h-[40vh] max-h-[380px] w-auto object-contain object-bottom"
+          className="h-[25vh] sm:h-[32vh] md:h-[40vh] max-h-[380px] w-auto object-contain object-bottom"
         />
       </div>
     </div>
